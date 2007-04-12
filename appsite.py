@@ -34,7 +34,8 @@ class AppSite(object):
         exists = os.path.exists
         abspath = os.path.abspath
 
-        parent = abspath(path)
+        pathRoot = abspath(path)
+        parent = pathRoot
         while True:
             path = parent
             cf = join(path, configFile)
@@ -43,7 +44,9 @@ class AppSite(object):
 
             parent = abspath(join(path, '..'))
             if path == parent:
-                return None
+                break
+
+        raise RuntimeError("No %s file found anywhere in %r" % (self.configFile, pathRoot))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -71,5 +74,10 @@ class AppSite(object):
 
         os.system('"%s" %s' % (applet, ' '.join(argv)))
 
-appsite = AppSite()
+try:
+    appsite = AppSite()
+except RuntimeError, e:
+    print e
+
+    raise SystemExit(-1)
 
