@@ -19,13 +19,17 @@ from ConfigParser import SafeConfigParser
 
 class AppSite(object):
     configFile = '.appsite'
-    basePath = '.'
     platformName = platform.system().lower()
 
-    def __init__(self):
-        self.basePath = self.findPathSite()
+    _basePath = None
+    def getBasePath(self):
+        if self._basePath is None:
+            self._basePath = self.findPathSite()
+        return self._basePath
+    basePath = property(getBasePath)
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def joinPath(self, *args):
+        return os.path.join(self.basePath, *args)
 
     def findPathSite(self, path='.', configFile=None):
         if configFile is None:
@@ -53,7 +57,7 @@ class AppSite(object):
     _cfg = None
     def getCfg(self):
         if self._cfg is None:
-            appsite = os.path.join(self.basePath, self.configFile)
+            appsite = self.joinPath(self.configFile)
             self._cfg = SafeConfigParser()
             self._cfg.read(appsite)
         return self._cfg
@@ -65,19 +69,20 @@ class AppSite(object):
         if argv is None:
             argv = sys.argv[1:]
 
-        applet = self.cfg.get(
-                        'appsite-' + self.platformName,
-                        'applet', 
-                        vars=dict(
-                            base=self.basePath,
-                            applet_name=appletName))
+        try:
+            applet = self.cfg.get(
+                            'appsite-' + self.platformName,
+                            'applet', 
+                            vars=dict(
+                                base=self.basePath,
+                                applet_name=appletName))
+        except RuntimeError, e:
+            print e
+            raise SystemExit(-1)
 
-        os.system('"%s" %s' % (applet, ' '.join(argv)))
+        return os.system('"%s" %s' % (applet, ' '.join(argv)))
 
-try:
-    appsite = AppSite()
-except RuntimeError, e:
-    print e
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    raise SystemExit(-1)
+appsite = AppSite()
 
