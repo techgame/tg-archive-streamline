@@ -25,6 +25,7 @@ class AppSite(object):
     def getBasePath(self):
         if self._basePath is None:
             self._basePath = self.findPathSite()
+            os.environ['APPSITE'] = self._basePath
         return self._basePath
     basePath = property(getBasePath)
 
