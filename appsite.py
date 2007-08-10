@@ -18,7 +18,7 @@ from ConfigParser import SafeConfigParser
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 class AppSite(object):
-    configFile = '.appsite'
+    configFile = 'appsite.cfg'
     platformName = platform.system().lower()
 
     _basePath = None
