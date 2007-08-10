@@ -6,6 +6,8 @@ syntax: glob
 
 syntax: regexp 
 ^archives/
+^build/
+^dist/
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~ Generally useful ignore configurations
