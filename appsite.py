@@ -31,6 +31,16 @@ class AppSite(object):
 
     def joinPath(self, *args):
         return os.path.join(self.basePath, *args)
+    def locationPath(self, location, *args):
+        loc = self.cfg.get('locations', location)
+        loc = loc.strip()
+        if loc[:1] in ['"', "'"]:
+            if loc[-1:] != loc[:1]:
+                raise ValueError('Unmatched quotes in location: '+location)
+            loc = loc[1:-1]
+
+        return self.joinPath(loc, *args)
+    location = locationPath
 
     def findPathSite(self, path='.', configFile=None):
         if configFile is None:
