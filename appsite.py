@@ -68,7 +68,7 @@ class AppSite(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def getLocations(self):
-        return self.cfg.get('locations')
+        return dict(self.cfg.items('locations'))
     locations = property(getLocations)
 
     _cfg = None
