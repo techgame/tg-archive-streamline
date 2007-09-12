@@ -69,7 +69,7 @@ class AppSite(object):
 
     def getLocations(self):
         return self.cfg.get('locations')
-    locations = property(getLocations, setLocations)
+    locations = property(getLocations)
 
     _cfg = None
     def getCfg(self):
