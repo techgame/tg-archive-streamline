@@ -29,6 +29,9 @@ class AppSite(object):
         return self._basePath
     basePath = property(getBasePath)
 
+    def cfgEntryPath(self, section, value):
+        pathEntry = self.cfg.get(section, value, vars=self.locations)
+        return self.joinPath(pathEntry)
     def joinPath(self, *args):
         return os.path.join(self.basePath, *args)
     def locationPath(self, location, *args):
@@ -40,7 +43,6 @@ class AppSite(object):
             loc = loc[1:-1]
 
         return self.joinPath(loc, *args)
-    location = locationPath
 
     def findPathSite(self, path='.', configFile=None):
         if configFile is None:
@@ -64,6 +66,10 @@ class AppSite(object):
         raise RuntimeError("No %s file found anywhere in %r" % (self.configFile, pathRoot))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def getLocations(self):
+        return self.cfg.get('locations')
+    locations = property(getLocations, setLocations)
 
     _cfg = None
     def getCfg(self):
