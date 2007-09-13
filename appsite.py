@@ -30,19 +30,23 @@ class AppSite(object):
     basePath = property(getBasePath)
 
     def cfgEntryPath(self, section, value):
-        pathEntry = self.cfg.get(section, value, vars=self.locations)
-        return self.joinPath(pathEntry)
+        loc = self.cfg.get(section, value, vars=self.locations)
+        loc = self._dequote(loc)
+        return self.joinPath(loc)
     def joinPath(self, *args):
         return os.path.join(self.basePath, *args)
     def locationPath(self, location, *args):
         loc = self.cfg.get('locations', location)
+        loc = self._dequote(loc)
+        return self.joinPath(loc, *args)
+
+    def _dequote(self, loc):
         loc = loc.strip()
         if loc[:1] in ['"', "'"]:
             if loc[-1:] != loc[:1]:
                 raise ValueError('Unmatched quotes in location: '+location)
             loc = loc[1:-1]
-
-        return self.joinPath(loc, *args)
+        return loc
 
     def findPathSite(self, path='.', configFile=None):
         if configFile is None:
