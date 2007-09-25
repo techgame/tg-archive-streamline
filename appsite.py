@@ -29,6 +29,10 @@ class AppSite(object):
         return self._basePath
     basePath = property(getBasePath)
 
+    def cfgEntry(self, section, value, vars={}):
+        entry = self.cfg.get(section, value, vars=vars)
+        entry = self._dequote(entry)
+        return entry
     def cfgEntryPath(self, section, value):
         loc = self.cfg.get(section, value, vars=self.locations)
         loc = self._dequote(loc)
