@@ -29,13 +29,22 @@ def findHGALLSite(path='.', configFile='.hgall'):
 
     raise RuntimeError("No %s file found anywhere in %r" % (configFile, pathRoot))
 
-ansiNormal = '\033[0m'
-ansiRed = '\033[0;31m'
-ansiGreen = '\033[0;32m'
-ansiBlue = '\033[0;34m'
-ansiLtRed = '\033[1;31m'
-ansiLtGreen = '\033[1;32m'
-ansiLtBlue = '\033[1;34m'
+if sys.platform == 'win32':
+    ansiNormal = ''
+    ansiRed = ''
+    ansiGreen = ''
+    ansiBlue = ''
+    ansiLtRed = ''
+    ansiLtGreen = ''
+    ansiLtBlue = ''
+else:
+    ansiNormal = '\033[0m'
+    ansiRed = '\033[0;31m'
+    ansiGreen = '\033[0;32m'
+    ansiBlue = '\033[0;34m'
+    ansiLtRed = '\033[1;31m'
+    ansiLtGreen = '\033[1;32m'
+    ansiLtBlue = '\033[1;34m'
 
 def hgcmd(argv):
     if argv[:1] == ['--refresh']:
