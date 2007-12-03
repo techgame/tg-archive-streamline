@@ -54,7 +54,7 @@ def hgcmd(argv):
         site = findHGALLSite()
         os.chdir(site)
 
-    hgRepos = [os.path.split(s.strip())[0] for s in file('.hgall', 'rb').readlines()]
+    hgRepos = [os.path.split(s.strip())[0] for s in file('.hgall', 'rb').readlines() if s.strip()]
 
     if not argv:
         argv = ['status']

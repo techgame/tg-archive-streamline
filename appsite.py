@@ -90,22 +90,33 @@ class AppSite(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def runApplet(self, appletName, argv=None):
+    def runApplet(self, appletName=None, argv=None):
         if argv is None:
             argv = sys.argv[1:]
 
+        applet = self.getApplet(appletName)
+        return os.system('"%s" %s' % (applet, ' '.join(argv)))
+
+    def getApplet(self, appletName=None):
+        proj = self.cfg.get('appsite', 'current')
+        app_host = self.cfg.get(proj, 'app_host')
+        if appletName is None:
+            appletName = self.cfg.get(proj, 'app_name')
+
         try:
             applet = self.cfg.get(
-                            'appsite-' + self.platformName,
-                            'applet', 
+                            'appsite',
+                            'applet_'+self.platformName, 
                             vars=dict(
                                 base=self.basePath,
-                                applet_name=appletName))
+                                app_host=app_host,
+                                app_base=os.path.join(self.basePath, app_host),
+                                app_name=appletName))
         except RuntimeError, e:
             print e
             raise SystemExit(-1)
-
-        return os.system('"%s" %s' % (applet, ' '.join(argv)))
+        
+        return applet
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

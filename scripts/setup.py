@@ -17,7 +17,7 @@ from distutils.core import setup
 #~ Definitions 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-scripts=['scripts/ipysl.py', 'scripts/pysl.py', 'scripts/appsl.py', 'scripts/hgall.py']
+scripts=['ipysl.py', 'pysl.py', 'appsl.py', 'hgall.py']
 
 if os.name == 'posix':
     scripts = [os.path.splitext(e)[0] for e in scripts]
