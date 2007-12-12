@@ -21,6 +21,9 @@ class AppSite(object):
     configFile = 'appsite.cfg'
     platformName = platform.system().lower()
 
+    applet_darwin='"%(app_base)s/Contents/MacOS/%(app_name)s"'
+    applet_winows='"%(app_base)s/Contents/Windows/%(app_name)s.exe"'
+
     _basePath = None
     def getBasePath(self):
         if self._basePath is None:
@@ -95,13 +98,24 @@ class AppSite(object):
             argv = sys.argv[1:]
 
         applet = self.getApplet(appletName)
-        return os.system('"%s" %s' % (applet, ' '.join(argv)))
+        cmd = '%s %s' % (applet, ' '.join(argv))
+        print cmd
+        return os.system(cmd)
 
     def getApplet(self, appletName=None):
         proj = self.cfg.get('appsite', 'current')
-        app_host = self.cfg.get(proj, 'app_host')
+
+        if self.cfg.has_option(proj, 'app_host'):
+            app_host = self.cfg.get(proj, 'app_host')
+        else: app_host = None
+        if not app_host:
+            app_host = self.getBasePath()
+
         if appletName is None:
             appletName = self.cfg.get(proj, 'app_name')
+
+        if not self.cfg.has_option('appsite', 'applet_'+self.platformName):
+            self.cfg.set('appsite', 'applet_'+self.platformName, getattr(self, 'applet_'+self.platformName))
 
         try:
             applet = self.cfg.get(
