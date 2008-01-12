@@ -50,9 +50,8 @@ class AppSite(object):
     def _dequote(self, loc):
         loc = loc.strip()
         if loc[:1] in ['"', "'"]:
-            if loc[-1:] != loc[:1]:
-                raise ValueError('Unmatched quotes in location: '+location)
-            loc = loc[1:-1]
+            if loc[-1:] == loc[:1]:
+                loc = loc[1:-1]
         return loc
 
     def findPathSite(self, path='.', configFile=None):
