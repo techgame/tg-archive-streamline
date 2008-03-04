@@ -22,7 +22,7 @@ class AppSite(object):
     platformName = platform.system().lower()
 
     applet_darwin='"%(app_base)s/Contents/MacOS/%(app_name)s"'
-    applet_winows='"%(app_base)s/Contents/Windows/%(app_name)s.exe"'
+    applet_windows='"%(app_base)s/Contents/Windows/%(app_name)s.exe"'
 
     _basePath = None
     def getBasePath(self):
