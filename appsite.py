@@ -22,7 +22,7 @@ class AppSite(object):
     platformName = platform.system().lower()
 
     applet_darwin='"%(app_base)s/Contents/MacOS/%(app_name)s"'
-    applet_windows='"%(app_base)s/Contents/Windows/%(app_name)s.exe"'
+    applet_windows='"%(app_base)s\\Contents\\Windows\\%(app_name)s.exe"'
 
     _basePath = None
     def getBasePath(self):
@@ -116,6 +116,8 @@ class AppSite(object):
         if not self.cfg.has_option('appsite', 'applet_'+self.platformName):
             self.cfg.set('appsite', 'applet_'+self.platformName, getattr(self, 'applet_'+self.platformName))
 
+        app_base = os.path.join(self.basePath, app_host)
+        app_base = os.path.normpath(app_base)
         try:
             applet = self.cfg.get(
                             'appsite',
@@ -123,7 +125,7 @@ class AppSite(object):
                             vars=dict(
                                 base=self.basePath,
                                 app_host=app_host,
-                                app_base=os.path.join(self.basePath, app_host),
+                                app_base=app_base, 
                                 app_name=appletName))
         except RuntimeError, e:
             print e
