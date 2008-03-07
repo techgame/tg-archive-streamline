@@ -113,15 +113,16 @@ class AppSite(object):
         if appletName is None:
             appletName = self.cfg.get(proj, 'app_name')
 
-        if not self.cfg.has_option('appsite', 'applet_'+self.platformName):
-            self.cfg.set('appsite', 'applet_'+self.platformName, getattr(self, 'applet_'+self.platformName))
+        applet_platform = 'applet_'+self.platformName
+        if not self.cfg.has_option(proj, applet_platform):
+            self.cfg.set(proj, applet_platform, getattr(self, applet_platform))
 
         app_base = os.path.join(self.basePath, app_host)
         app_base = os.path.normpath(app_base)
         try:
             applet = self.cfg.get(
-                            'appsite',
-                            'applet_'+self.platformName, 
+                            proj,
+                            applet_platform,
                             vars=dict(
                                 base=self.basePath,
                                 app_host=app_host,
