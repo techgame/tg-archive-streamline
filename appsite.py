@@ -8,9 +8,11 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~ Imports 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+from __future__ import with_statement
 
 import os, sys
 import platform
+
 from ConfigParser import SafeConfigParser
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -80,6 +82,8 @@ class AppSite(object):
     def getLocations(self):
         return dict(self.cfg.items('locations'))
     locations = property(getLocations)
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     _cfg = None
     def getCfg(self):
@@ -90,6 +94,12 @@ class AppSite(object):
         return self._cfg
     cfg = property(getCfg)
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    def save(self):
+        appsite = self.joinPath(self.configFile)
+        with file(appsite, 'wb') as configfile:
+            self.cfg.write(configfile)
+        
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def runApplet(self, appletName=None, argv=None):
