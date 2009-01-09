@@ -112,25 +112,29 @@ class AppSite(object):
         return os.system(cmd)
 
     def getApplet(self, appletName=None):
-        proj = self.cfg.get('appsite', 'current')
+        cfg = self.cfg
+        proj = cfg.get('appsite', 'current')
 
-        if self.cfg.has_option(proj, 'app_host'):
-            app_host = self.cfg.get(proj, 'app_host')
+        if cfg.has_option(proj, 'app_host'):
+            app_host = cfg.get(proj, 'app_host')
         else: app_host = None
         if not app_host:
             app_host = self.getBasePath()
 
         if appletName is None:
-            appletName = self.cfg.get(proj, 'app_name')
+            appletName = cfg.get(proj, 'app_name')
+
+        if cfg.has_option(proj, 'app_name@'+appletName):
+            appletName = cfg.get(proj, 'app_name@'+appletName)
 
         applet_platform = 'applet_'+self.platformName
-        if not self.cfg.has_option(proj, applet_platform):
-            self.cfg.set(proj, applet_platform, getattr(self, applet_platform))
+        if not cfg.has_option(proj, applet_platform):
+            cfg.set(proj, applet_platform, getattr(self, applet_platform))
 
         app_base = os.path.join(self.basePath, app_host)
         app_base = os.path.normpath(app_base)
         try:
-            applet = self.cfg.get(
+            applet = cfg.get(
                             proj,
                             applet_platform,
                             vars=dict(
